@@ -37,7 +37,7 @@ pipeline {
                 sshTransfer(
                   sourceFiles: 'target/hello-world.war', // 전송할 파일 경로
                   removePrefix: 'target', // 제거할 경로 prefix
-                  execCommand: 'sudo mv hello-world.war /var/lib/tomcat9/webapps/' // 파일 전송 후 실행할 명령어
+                  execCommand: 'sudo mv hello-world.war /var/lib/tomcat9/webapps/' // 파일 전송 후 실행할 명령
                 )
               ],
               verbose: true
