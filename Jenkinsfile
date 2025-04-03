@@ -3,9 +3,9 @@ pipeline {
     label "jenkins-node"
   }
 
-  triggers {
-    pollSCM('* * * * *')
-  }
+//  triggers {
+//    pollSCM('* * * * *')
+//  }
 
   stages {
     stage('Checkout') {
