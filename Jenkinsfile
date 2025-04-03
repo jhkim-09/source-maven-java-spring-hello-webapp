@@ -10,6 +10,7 @@ pipeline {
         url: 'https://github.com/jhkim-09/source-maven-java-spring-hello-webapp.git'
       }
     }
+
     stage('Build') {
       steps {
         sh 'mvn clean package -DskipTests=true'
