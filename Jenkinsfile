@@ -1,7 +1,7 @@
 pipeline {
   agent any
 
-  triggers {
+  triggers { 
     pollSCM('* * * * *')
   }
 
@@ -24,8 +24,22 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        deploy adapters: [tomcat9(credentialsId: 'tomcat-manager', url: 'http://192.168.56.102:8080')], contextPath: null, war: 'target/hello-world.war'
+        sshPublisher(
+          publishers: [
+            sshPublisherDesc(
+              configName: 'ssh-tomcat', // 설정한 SSH 서버 이름
+              transfers: [
+                sshTransfer(
+                  sourceFiles: 'target/hello-world.war', // 전송할 파일 경로
+                  removePrefix: 'target', // 제거할 경로 prefix
+                  execCommand: 'sudo mv hello-world.war /var/lib/tomcat9/webapps/' // 파일 전송 후 실행할 명령
+                )
+              ],
+              verbose: true
+            )
+          ]
+        )
       }
-    }
+    }    
   }
 }
