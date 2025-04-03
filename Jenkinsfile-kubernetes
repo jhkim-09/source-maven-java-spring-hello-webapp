@@ -72,7 +72,7 @@ pipeline {
         githubEmail = 'juhyokim@nobreak.kr' //myaccount@example.com
         githubId = 'kimjuhyo' //myaccount 
         githubRepo = 'test' //jenkins-kube-deploy
-        githubURL = "https://github.com/${githubId}/${githubRepo}.git"
+        githubURL = "https://github.com/${githubUser}/${githubRepo}.git"
         dockerhubId = 'kimjuhyo' //myaccount
         dockerhubRepo = 'kaniko-test' //hello-world
       }
