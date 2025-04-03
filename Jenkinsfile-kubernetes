@@ -30,7 +30,7 @@ pipeline {
           volumes:
           - name: registry-credentials
             secret:
-              secretName: registry-credentials
+              secretName: docker-hub-credential
               items:
               - key: .dockerconfigjson
                 path: config.json
