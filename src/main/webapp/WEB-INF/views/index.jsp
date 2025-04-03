@@ -6,6 +6,6 @@
 <body>
 <h1>${msg}</h1>
 <h2>Today is <fmt:formatDate value="${today}" pattern="yyyy-MM-dd"/></h2>
-<h3>Version: 11.0</h3>
+<h3>Version: 10</h3>
 </body>
 </html>
