@@ -1,0 +1,56 @@
+pipeline {
+  agent none
+
+  stages {
+    stage('Checkout') {
+      agent {
+        docker { image 'maven:3-openjdk-17' }
+      }
+      steps {
+        git branch: 'main', url: 'https://github.com/jhkim-09/source-maven-java-spring-hello-webapp.git'
+      }
+    }
+    stage('Build') {
+      agent {
+        docker { image 'maven:3-openjdk-17' }
+      }
+      steps {
+        sh 'mvn clean package -DskipTests=true'
+      }
+    }
+    stage('Test') {
+      agent {
+        docker { image 'maven:3-openjdk-17' }
+      }
+      steps {
+        sh 'mvn test'
+      }
+    }
+    stage('Build Docker Image') {
+      agent { label 'controller' }
+      steps {
+        sh 'docker build -t jhkim/cicd .'
+      }
+    }
+    stage('Tag Docker Image') {
+      agent { label 'controller' }
+      steps {
+        sh 'docker tag jhkim/cicd:latest 702450028752.dkr.ecr.ap-northeast-2.amazonaws.com/jhkim/cicd:latest' // Tagging with latest
+      }
+    }
+    stage('Publish Docker Image') {
+      agent { label 'controller' }
+      steps {
+        withDockerRegistry(credentialsId: 'docker-registry-credential', url: 'https://702450028752.dkr.ecr.ap-northeast-2.amazonaws.com') {
+          sh 'docker push 702450028752.dkr.ecr.ap-northeast-2.amazonaws.com/jhkim/cicd:latest' // Tagging with latest
+        }
+      }
+    }
+    stage('Run Docker Container') {
+      agent { label 'controller' }
+      steps {
+        ansiblePlaybook(playbook: 'docker-container-deploy.yaml')
+      }
+    }
+  }
+}
