@@ -49,7 +49,7 @@ pipeline {
     stage('Run Docker Container') {
       agent { label 'controller' }
       steps {
-        ansiblePlaybook(playbook: 'docker-container-deploy.yaml')
+        ansiblePlaybook(playbook: 'docker-container-deploy-aws.yaml')
       }
     }
   }
