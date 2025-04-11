@@ -74,7 +74,9 @@ pipeline {
         githubId = 'jhkim-09' //c1t1d0s7 
         githubRepo = 'test' //jenkins-kube-deploy
         githubURL = "https://github.com/${githubId}/${githubRepo}.git"
-        ecrURI = '702450028752.dkr.ecr.ap-northeast-2.amazonaws.com/private-ecr/cicd-test'
+        ecrURL = '702450028752.dkr.ecr.ap-northeast-2.amazonaws.com'
+        ecrNamespace = 'private-ecr'
+        ecrRepo = 'cicd-test'
       }
       steps {
         container('git') {
@@ -82,7 +84,7 @@ pipeline {
           sh "git config --global --add safe.directory ${workspace}"
           sh "git config --global user.name ${githubUser}"
           sh "git config --global user.email ${githubEmail}"
-          sh 'sed -i "/image:.*/ c\\image: ${ecrURI}:${BUILD_NUMBER}" deployment.yaml'
+          sh 'sed -i "s/image:.*/image: ${ecrURL}\\/${ecrNamespace}\\/${ecrRepo}:${BUILD_NUMBER}" deployment.yaml'
           sh 'git add deployment.yaml'
           sh 'git commit -m "Jenkins Build Number - ${BUILD_NUMBER}"'
           withCredentials([gitUsernamePassword(credentialsId: 'github-credential', gitToolName: 'Default')]) {
