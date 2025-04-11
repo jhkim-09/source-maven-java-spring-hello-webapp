@@ -1,0 +1,58 @@
+pipeline {
+  agent none
+
+  stages {
+    stage('Checkout') {
+      agent {
+        docker { image 'maven:3-openjdk-17' }
+      }
+      steps {
+        git branch: 'main', url: 'https://github.com/jhkim-09/source-maven-java-spring-hello-webapp.git'
+      }
+    }
+    stage('Build') {
+      agent {
+        docker { image 'maven:3-openjdk-17' }
+      }
+      steps {
+        sh 'mvn clean package -DskipTests=true'
+      }
+    }
+    stage('Test') {
+      agent {
+        docker { image 'maven:3-openjdk-17' }
+      }
+      steps {
+        sh 'mvn test'
+      }
+    }
+    stage('Build Docker Image') {
+      agent { label 'controller' }
+      steps {
+        sh 'docker build -t private-ecr/cicd-test .' // ECR '푸시 명령 보기' 참조
+      }
+    }
+    stage('Tag Docker Image') {
+      agent { label 'controller' }
+      steps {
+        sh 'docker tag private-ecr/cicd-test:latest 702450028752.dkr.ecr.ap-northeast-2.amazonaws.com/private-ecr/cicd-test:$BUILD_NUMBER' // Tagging with build number
+        sh 'docker tag private-ecr/cicd-test:latest 702450028752.dkr.ecr.ap-northeast-2.amazonaws.com/private-ecr/cicd-test:latest' // Tagging with latest
+      }
+    }
+    stage('Publish Docker Image') {
+      agent { label 'controller' }
+      steps {
+        withDockerRegistry(credentialsId: 'ecr-credential', url: 'https://702450028752.dkr.ecr.ap-northeast-2.amazonaws.com') {
+          sh 'docker push 702450028752.dkr.ecr.ap-northeast-2.amazonaws.com/private-ecr/cicd-test:$BUILD_NUMBER' // Push with build number
+          sh 'docker push 702450028752.dkr.ecr.ap-northeast-2.amazonaws.com/private-ecr/cicd-test:latest' // Push with latest
+        }
+      }
+    }
+    stage('Run Docker Container') {
+      agent { label 'controller' }
+      steps {
+        sh 'docker container run --detach --name <CONATINAER_NAME> -p 80:8080 702450028752.dkr.ecr.ap-northeast-2.amazonaws.com/private-ecr/cicd-test:$BUILD_NUMBER'
+      }
+    }
+  }
+}
