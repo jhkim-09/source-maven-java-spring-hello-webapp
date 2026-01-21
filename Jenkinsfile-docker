@@ -3,9 +3,7 @@ pipeline {
 
   stages {
     stage('CheckOut') {
-      agent {
-        docker { image 'docker:dind' }
-      }
+      agent builtin
       steps {
         git branch: 'main',
         url: 'https://github.com/jhkim-09/source-maven-java-spring-hello-webapp.git'
@@ -20,26 +18,20 @@ pipeline {
       }
     }
     stage('ImageBuild') {
-      agent {
-        docker { image 'docker:dind' }
-      }
+      agent builtin
       steps {
         sh 'docker image build -t tomcat:hello .'
       }
     }
     stage('ImageTag') {
-      agent {
-        docker { image 'docker:dind' }
-      }
+      agent builtin
       steps {
 //        sh 'docker image tag tomcat:hello kimjuhyo/tomcat:$BUILDNUMBER'
         sh 'docker image tag tomcat:hello kimjuhyo/tomcat:latest'
       }
     }
     stage('ImagePush') {
-      agent {
-        docker { image 'docker:dind' }
-      }
+      agent builtin
       steps {
         withDockerRegistry(credentialsId: 'docker-hub-token', url: 'https://index.docker.io/v1/') {
 //          sh 'docker image push kimjuhyo/tomcat:$BUILDNUMBER'
