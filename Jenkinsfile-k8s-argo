@@ -73,7 +73,7 @@ spec:
       }
       steps {
         container('git') {
-          git branch: 'main', credentialsID: 'github-credential',
+          git branch: 'main', credentialsId: 'github-credential',
           url: "${githubURL}"
           sh "git config --global --add safe.directory ${workspace}"
           sh "git config --global user.name ${githubUser}"
