@@ -82,11 +82,12 @@ pipeline {
           sh "git config --global --add safe.directory ${workspace}"
           sh "git config --global user.name ${githubUser}"
           sh "git config --global user.email ${githubEmail}"
-          sh 'sed -i "s/image:.*/image: ${dockerhubId}\\/${dockerhubRepo}:${BUILD_NUMBER}/g" deployment.yaml
+          sh 'sed -i "s/image:.*/image: ${dockerhubId}\\/${dockerhubRepo}:${BUILD_NUMBER}/g" deployment.yaml'
           sh 'git add deployment.yaml'
           sh 'git commit -m "Jenkins Build Numbert = ${BUILD_NUMBER}"'
           withCredentials([gitUsernamePassword(credentialsId: 'github-credential', gitToolName: 'Default')]) {
-          sh 'git push --set-upstream origin main'
+            sh 'git push --set-upstream origin main'
+          }
         }
       }
     }
