@@ -68,13 +68,13 @@ pipeline {
     }
     stage('Update k8s Manifests & Push') {
       environment {
-        githubUser = jhkim-09
-        githubEmail = juhyokim@nobreak.kr
-        githubId = jhkim-09
-        githubRepo = jenkins-argo-kube
-        githubURL = https://github.com/jhkim-09/jenkins-argo-kube.git
-        dockerhubId = kimjuhyo
-        dockerhubRepo = cicd-last
+        githubUser = "jhkim-09"
+        githubEmail = "juhyokim@nobreak.kr"
+        githubId = "jhkim-09"
+        githubRepo = "jenkins-argo-kube"
+        githubURL = "https://github.com/jhkim-09/jenkins-argo-kube.git"
+        dockerhubId = "kimjuhyo"
+        dockerhubRepo = "cicd-last"
       }
       steps {
         container('git') {
