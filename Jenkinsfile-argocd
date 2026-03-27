@@ -62,7 +62,7 @@ pipeline {
     stage('Build & Tag & Push Docker Image') {
       steps {
         container('kaniko') {
-          sh 'executor --context=dir://$WORKSPACE --destination=kimjuhyo/k8s-cicd:$BUILD_NUMBER --destination=kimjuhyo/k8s-cicd:latest'
+          sh 'executor --context=dir://$WORKSPACE --destination=kimjuhyo/cicd-last:$BUILD_NUMBER --destination=kimjuhyo/cicd-last:latest'
         }
       }
     }
