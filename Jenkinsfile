@@ -50,6 +50,7 @@ pipeline {
     stage('Run Container') {
       agent { label 'controller' }
       steps {
+        sh 'docker container rm -f myweb'
         sh 'docker container run --detach --name myweb -p 80:8080 kimjuhyo/my-tomcat:latest'
       }
     }
